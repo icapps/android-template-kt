@@ -3,6 +3,7 @@ apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 def buildServer = project.hasProperty("buildServer") && buildServer
 
@@ -32,13 +33,11 @@ android {
             debuggable true
             applicationIdSuffix ".debug"
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         beta {
             debuggable true
             applicationIdSuffix ".beta"
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled true
@@ -51,6 +50,7 @@ ext.okhttpVersion = '3.4.2'
 ext.support = '25.2.0'
 ext.icepickVersion = '3.2.0'
 ext.playservices = '10.2.0'
+ext.chuck = '1.0.3'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -76,6 +76,10 @@ dependencies {
     // Icepick for savedInstanceStates
     compile "frankiesardo:icepick:$icepickVersion"
     provided "frankiesardo:icepick-processor:$icepickVersion"
+
+    debugCompile "com.readystatesoftware.chuck:library:$chuck"
+    betaCompile "com.readystatesoftware.chuck:library-no-op:$chuck"
+    releaseCompile "com.readystatesoftware.chuck:library-no-op:$chuck"
 }
 
 retrolambda {
