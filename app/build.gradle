@@ -17,6 +17,7 @@ android {
         versionCode Integer.parseInt(buildNumber)
         versionName buildVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     dataBinding {
@@ -28,20 +29,44 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('../keystore/debug.keystore')
+            storePassword "androidkey"
+            keyAlias "android"
+            keyPassword "androidkey"
+        }
+        beta {
+            storeFile file('../keystore/beta.keystore')
+            storePassword "androidkey"
+            keyAlias "android"
+            keyPassword "androidkey"
+        }
+        release {
+            storeFile file('../keystore/release.keystore')
+            storePassword "xxx"
+            keyAlias "android"
+            keyPassword "xxx"
+        }
+    }
+
     buildTypes {
         debug {
             debuggable true
             applicationIdSuffix ".debug"
             minifyEnabled false
+            signingConfig signingConfigs.debug
         }
         beta {
             debuggable true
             applicationIdSuffix ".beta"
             minifyEnabled false
+            signingConfig signingConfigs.beta
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
