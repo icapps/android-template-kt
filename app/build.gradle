@@ -30,11 +30,13 @@ android {
     buildTypes {
         debug {
             debuggable true
+            applicationIdSuffix ".debug"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         beta {
             debuggable true
+            applicationIdSuffix ".beta"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -46,9 +48,9 @@ android {
 }
 
 ext.okhttpVersion = '3.4.2'
-ext.support = '25.1.1'
+ext.support = '25.2.0'
 ext.icepickVersion = '3.2.0'
-ext.playservices = '10.0.1'
+ext.playservices = '10.2.0'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
