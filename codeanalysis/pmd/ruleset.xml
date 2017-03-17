@@ -1,0 +1,83 @@
+<ruleset name="Custom ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>
+        Ruleset applied for this project
+    </description>
+
+    <rule ref="rulesets/java/android.xml"/>
+    <rule ref="rulesets/java/basic.xml"/>
+    <rule ref="rulesets/java/braces.xml"/>
+    <rule ref="rulesets/java/clone.xml"/>
+    <rule ref="rulesets/java/codesize.xml"/>
+    <rule ref="rulesets/java/codesize.xml/TooManyMethods">
+        <properties>
+            <property name="maxmethods" value="17"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/controversial.xml">
+        <exclude name="AtLeastOneConstructor"/>
+        <exclude name="OnlyOneReturn"/>
+        <exclude name="AvoidFinalLocalVariable"/>
+        <exclude name="AvoidPrefixingMethodParameters"/>
+        <exclude name="UseConcurrentHashMap"/>
+    </rule>
+    <rule ref="rulesets/java/controversial.xml/AvoidLiteralsInIfCondition">
+        <properties>
+            <property name="ignoreMagicNumbers" value="-1,0,1,0.0f"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/controversial.xml/AssignmentInOperand">
+        <properties>
+            <property name="allowIncrementDecrement" value="true"/>
+        </properties>
+    </rule>
+
+    <rule ref="rulesets/java/controversial.xml/DataflowAnomalyAnalysis">
+        <properties>
+            <property name="violationSuppressRegex" value="^Found 'UR'-anomaly.*"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/coupling.xml">
+        <exclude name="LawOfDemeter"/>
+    </rule>
+    <rule ref="rulesets/java/design.xml">
+        <exclude name="CompareObjectsWithEquals"/>
+    </rule>
+    <rule ref="rulesets/java/empty.xml"/>
+    <rule ref="rulesets/java/finalizers.xml"/>
+    <rule ref="rulesets/java/imports.xml"/>
+    <rule ref="rulesets/java/junit.xml"/>
+    <rule ref="rulesets/java/logging-jakarta-commons.xml">
+        <exclude name="GuardDebugLogging"/>
+    </rule>
+
+    <rule ref="rulesets/java/logging-java.xml">
+        <exclude name="LoggerIsNotStaticFinal"/>
+    </rule>
+    <rule ref="rulesets/java/migrating.xml"/>
+    <rule ref="rulesets/java/optimizations.xml"/>
+    <rule ref="rulesets/java/strictexception.xml">
+    </rule>
+    <rule ref="rulesets/java/strings.xml"/>
+    <rule ref="rulesets/java/strings.xml/AvoidDuplicateLiterals">
+        <properties>
+            <property name="skipAnnotations" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/sunsecure.xml"/>
+    <rule ref="rulesets/java/typeresolution.xml">
+    </rule>
+    <rule ref="rulesets/java/unnecessary.xml">
+        <exclude name="UselessParentheses"/>
+    </rule>
+    <rule ref="rulesets/java/unusedcode.xml"/>
+
+    <rule ref="rulesets/java/naming.xml">
+        <exclude name="LongVariable"/>
+        <exclude name="ShortVariable"/>
+        <exclude name="AbstractNaming"/>
+    </rule>
+
+</ruleset>

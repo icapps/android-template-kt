@@ -1,0 +1,5 @@
+<resources>
+    <!-- TODO, replace -->
+    <string name="app_name">Template</string>
+    <string name="main_hello">Hello World!</string>
+</resources>

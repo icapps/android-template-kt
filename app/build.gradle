@@ -1,0 +1,129 @@
+apply plugin: 'com.android.application'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.neenbedankt.android-apt'
+
+def buildServer = project.hasProperty("buildServer") && buildServer
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "be.icapps.template"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode Integer.parseInt(buildNumber)
+        versionName buildVersionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        beta {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext.okhttpVersion = '3.4.2'
+ext.support = '25.1.1'
+ext.icepickVersion = '3.2.0'
+ext.playservices = '10.0.1'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+
+    // Android support and compat libraries
+    compile "com.android.support:appcompat-v7:$support"
+    compile "com.android.support:recyclerview-v7:$support"
+
+    // Lambda
+    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
+
+    // Crash Reporting & Analytics
+    compile 'com.icapps.crashreporter:crashlog:2.0.4'
+    compile 'com.icapps.crashreporter:crashlog-crittercism:2.0.4'
+    compile 'com.icapps.crashreporter:crashlog-googleanalytics:2.0.5'
+    compile 'com.crittercism:crittercism-android-agent:5.5.5'
+    compile "com.google.android.gms:play-services-analytics:$playservices"
+
+    // Icepick for savedInstanceStates
+    compile "frankiesardo:icepick:$icepickVersion"
+    provided "frankiesardo:icepick-processor:$icepickVersion"
+}
+
+retrolambda {
+    jdk System.getenv("JAVA8_HOME")
+    oldJdk System.getenv("JAVA7_HOME")
+    javaVersion JavaVersion.VERSION_1_7
+
+    println "java.version = ${System.getProperty('java.version')}"
+    println "java.home = ${System.getProperty('java.home')}"
+}
+
+findbugs {
+    sourceSets = []
+}
+
+task findbugs(type: FindBugs, dependsOn: 'assembleDebug') {
+
+    description 'Run findbugs'
+    group 'verification'
+
+    classes = fileTree('build/intermediates/classes/debug/')
+    source = fileTree('src/main/java')
+    classpath = files()
+
+    effort = 'max'
+
+    excludeFilter = file("../codeanalysis/findbugs/exclude.xml")
+
+    reports {
+        xml.enabled = buildServer
+        html.enabled = !buildServer
+    }
+}
+
+pmd {
+    ruleSets = []
+    ruleSetFiles = files("../codeanalysis/pmd/ruleset.xml")
+}
+
+task pmd(type: Pmd, dependsOn: 'assembleDebug') {
+
+    description 'Run pmd'
+    group 'verification'
+
+    source = fileTree('src/main/java')
+
+    reports {
+        xml.enabled = buildServer
+        html.enabled = !buildServer
+    }
+}
+
+apply plugin: 'org.owasp.dependencycheck'

@@ -1,0 +1,16 @@
+<FindBugsFilter>
+
+    <Match>
+        <Class name="~.*R\$.*"/>
+    </Match>
+    <Match>
+        <Class name="~.*Manifest\$.*"/>
+    </Match>
+    <Match>
+        <Class name="~.*databinding.*Binding"/>
+    </Match>
+    <Match>
+        <Class name="~.*BR"/>
+    </Match>
+
+</FindBugsFilter>
