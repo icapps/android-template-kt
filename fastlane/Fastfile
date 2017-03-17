@@ -1,0 +1,153 @@
+# Fix the fastlane version so that we don't get any surprises while deploying.
+fastlane_version "2.5.0"
+require 'java-properties'
+
+# Don't generate README files.
+skip_docs
+
+# Make sure all changes are committed.
+before_all do |lane|
+ clean_build_artifacts
+end
+
+#####################
+### CONFIGURATION ###
+#####################
+
+# Project configuration.
+release_package_name              = 'com.icapps.project'
+store_developer_credentials_path  = './fastlane/PublishCredentials.json'
+
+# Hockey configuration.
+hockey_app_api_key = '123123123'
+
+# Apteligent configuration.
+apteligent_app_id_beta        = '123123123'
+apteligent_api_key_beta       = '123123123'
+apteligent_app_id_release     = '123123123'
+apteligent_api_key_release    = '123123123'
+
+####################
+### PUBLIC LANES ###
+####################
+
+lane :debug do
+  ensure_git_status_clean # Make sure the repository is clean before starting with the alpha deployment process.
+  version_bump            # Bump the build version.
+  push_to_git_remote      # Push the changes to the origin.
+
+  code_quality
+  update_translations
+  build(buildVariant: 'Debug')            	# Build the application with the buildVariant.
+  upload_to_hockey(buildVariant: 'debug') 	# Deploy the apk to HockeyApp.
+end
+
+lane :beta do
+  ensure_git_status_clean # Make sure the repository is clean before starting with the alpha deployment process.
+  version_bump            # Bump the build version.
+  push_to_git_remote      # Push the changes to the origin.
+
+  code_quality
+  update_translations
+  build(buildVariant: 'Beta')            # Build the application with the buildVariant.
+  upload_to_hockey(buildVariant: 'beta') # Deploy the apk to HockeyApp.
+  upload_to_apteligent(is_beta : true)		# Upload mapping to Crittercism.
+end
+
+lane :release do
+  ensure_git_status_clean # Make sure the repository is clean before starting with the alpha deployment process.
+  version_bump            # Bump the build version.
+  push_to_git_remote      # Push the changes to the origin.
+
+  code_quality
+  update_translations
+  build(buildVariant: 'Release')            # Build the application with the buildVariant.
+  upload_store
+  upload_to_apteligent(is_beta : false)		# Upload mapping to Crittercism.
+end
+
+lane :just_update_translations do
+  sh "translations import"
+end
+
+lane :update_translations do
+  ensure_git_status_clean
+  just_update_translations
+  commit_translations
+  push_to_git_remote
+end
+
+########################
+### 🔑  PRIVATE LANES ##
+########################
+
+private_lane :upload_to_hockey do |options|
+  hockey(
+    api_token: hockey_app_api_key,
+    release_type: '0', # We set the release type to be beta.
+    status:       '2', # The status is available for download.
+    ipa: "./app/build/outputs/apk/app-#{options[:buildVariant]}.apk"
+  )
+end
+
+# Upload the mapping file to Apteligent.
+private_lane :upload_to_apteligent do |options|
+	upload_mapping_crittercism(
+    	mapping_file: 'app/build/outputs/mapping/release/mapping.txt',
+    	api_key: properties[:is_beta] ? apteligent_app_key_beta : apteligent_app_key_production,
+    	app_id: properties[:is_beta] ? apteligent_app_id_beta : apteligent_app_id_production,
+    	version_name: normal_version_name()
+  	)
+ end
+
+# Retrieve the version name from Gradle properties
+ private_lane :normal_version_name do
+  properties = JavaProperties.load("../gradle.properties")
+  properties[:buildVersionName]+'.'+properties[:buildNumber]+'-'+properties[:buildNumber]
+end
+
+private_lane :build do |options|
+  sh "cd ../; ./gradlew clean app:assemble#{options[:buildVariant]}"
+end
+
+private_lane :code_quality do
+  sh "cd ../; ./gradlew pmd findbugs dependencyCheck --info"
+end
+
+private_lane :version_bump do
+  properties = JavaProperties.load("../gradle.properties")
+  properties[:buildNumber] = properties[:buildNumber].to_i + 1
+  @last_commit = properties[:githash]
+  properties[:githash] = `git rev-parse --short HEAD`.strip
+  JavaProperties.write(properties,"../gradle.properties")
+  commit_version
+end
+
+private_lane :upload_store do
+  supply(
+    json_key:       store_developer_credentials_path,
+    apk:            'app/build/outputs/apk/app-release.apk',
+    package_name:   release_package_name,
+    track:          'alpha'
+  )
+end
+
+private_lane :commit_version do
+  git_commit(
+    path: './gradle.properties',
+    message: 'Version bump'
+  )
+end
+
+private_lane :commit_translations do
+  # Check if there were updates to the translations files.
+  files = sh('cd ..; git ls-files --modified')
+  unless files.empty?
+    git_commit(
+      path: [
+        'app/src/main/res/values/values.xml',
+      ],
+      message: 'Update translations'
+    )
+  end
+end
