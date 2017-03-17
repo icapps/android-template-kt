@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- TODO: Replace placeholder ID with your tracking ID -->
+    <string name="ga_trackingId">UA-xxx</string>
+    <!-- TODO: Replace placeholder name -->
+    <string name="ga_appName">XXX</string>
+
+    <bool name="ga_debug">true</bool>
+
+    <integer name="ga_dispatchPeriod">60</integer>
+
+    <!-- Enable Activity tracking -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- Enable automatic exception tracking -->
+    <bool name="ga_reportUncaughtExceptions">false</bool>
+</resources>
