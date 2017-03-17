@@ -55,13 +55,15 @@ android {
             debuggable true
             applicationIdSuffix ".debug"
             minifyEnabled false
-            signingConfig signingConfigs.debug
+            //signingConfig signingConfigs.debug    //TODO enable after keystore has been added
+            versionNameSuffix "." + buildNumber
         }
         beta {
             debuggable true
             applicationIdSuffix ".beta"
             minifyEnabled false
             signingConfig signingConfigs.beta
+            versionNameSuffix "." + buildNumber
         }
         release {
             minifyEnabled true
