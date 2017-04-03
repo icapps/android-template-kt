@@ -1,0 +1,3 @@
+replacementQuestions:
+  - name: AUTHOR
+    message: 'Who is the author of this project'
