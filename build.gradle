@@ -13,26 +13,23 @@ buildscript {
     }
 }
 
+def awsKey = System.env.AWS_ACCESS_KEY ?: AWS_ACCESS_KEY
+def awsSecretKey = System.env.AWS_SECRET_KEY ?: AWS_SECRET_KEY
+
+
 allprojects {
     repositories {
         jcenter()
         maven {url "https://clojars.org/repo/"}
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
         maven {
-            credentials {
-                username 'maven_readonly'
-                password 'RphfFukDEeuvbPhvxFsu'
+            url "s3://icappsmaven/release"
+            credentials(AwsCredentials) {
+                accessKey awsKey
+                secretKey awsSecretKey
             }
-            url "https://api.bitbucket.org/1.0/repositories/icapps/maven_repository/raw/releases"
         }
     }
 }
-
 
 task clean(type: Delete) {
     delete rootProject.buildDir
