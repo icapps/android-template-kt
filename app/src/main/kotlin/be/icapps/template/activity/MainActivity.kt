@@ -1,8 +1,9 @@
-package be.icapps.template
+package be.icapps.template.activity
 
 import android.app.Activity
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import be.icapps.template.R
 import be.icapps.template.databinding.ActivityMainBinding
 
 class MainActivity : Activity() {

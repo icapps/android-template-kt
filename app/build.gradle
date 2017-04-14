@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 def buildServer = project.hasProperty("buildServer") && buildServer
@@ -23,11 +22,6 @@ android {
 
     dataBinding {
         enabled = true
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     // TODO enable after keystore has been created
@@ -56,16 +50,16 @@ android {
         debug {
             debuggable true
             applicationIdSuffix ".debug"
+            versionNameSuffix "." + buildNumber
             minifyEnabled false
             // signingConfig signingConfigs.debug
-            versionNameSuffix "." + buildNumber
         }
         beta {
             debuggable true
             applicationIdSuffix ".beta"
+            versionNameSuffix "." + buildNumber
             minifyEnabled false
             // signingConfig signingConfigs.beta
-            versionNameSuffix "." + buildNumber
         }
         release {
             minifyEnabled true
@@ -73,10 +67,10 @@ android {
             // signingConfig signingConfigs.release
         }
     }
-}
 
-sourceSets {
-    main.java.srcDirs += 'src/main/kt'
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 kapt {
@@ -92,78 +86,32 @@ dependencies {
 
     // Kotlin
     compile kotlinDeps.stdLib
-    kapt kotlinDeps.databindingCompiler
+    kapt pluginDeps.databindingCompiler
 
     // Android support and compat libraries
     compile supportDeps.appCompat
     compile supportDeps.design
     compile supportDeps.recyclerView
 
-    // Lambda support
-    retrolambdaConfig retrolambdaDeps.retrolambda
-
     // Crash Reporting & Analytics
-    compile analyticsDeps.crashlog
-    compile analyticsDeps.crashlogCrittercism
-    compile analyticsDeps.crashlogGoogleAnalytics
-    compile analyticsDeps.crittercism
-    compile analyticsDeps.playServicesAnalytics
+    compile generalDeps.crashlog
+    compile generalDeps.crashlogCrittercism
+    compile generalDeps.crashlogGoogleAnalytics
+    compile generalDeps.crittercism
+    compile generalDeps.playServicesAnalytics
 
     // Icepick
-    compile icePickDeps.icePick
-    provided icePickDeps.icePickProcessor
+    compile generalDeps.icePick
+    provided pluginDeps.icePickProcessor
 
     // Chuck
-    debugCompile chuckDeps.chuck
-    betaCompile chuckDeps.chuckNoOp
-    releaseCompile chuckDeps.chuckNoOp
-}
+    debugCompile generalDeps.chuck
+    betaCompile generalDeps.chuckNoOp
+    releaseCompile generalDeps.chuckNoOp
 
-retrolambda {
-    jdk System.getenv("JAVA8_HOME")
-    oldJdk System.getenv("JAVA7_HOME")
-    javaVersion JavaVersion.VERSION_1_7
-
-    println "java.version = ${System.getProperty('java.version')}"
-    println "java.home = ${System.getProperty('java.home')}"
-}
-
-findbugs {
-    sourceSets = []
-}
-
-task findbugs(type: FindBugs, dependsOn: 'assembleDebug') {
-    description 'Run findbugs'
-    group 'verification'
-
-    classes = fileTree('build/intermediates/classes/debug/')
-    source = fileTree('src/main/java')
-    classpath = files()
-
-    effort = 'max'
-    excludeFilter = file("../codeanalysis/findbugs/exclude.xml")
-
-    reports {
-        xml.enabled = buildServer
-        html.enabled = !buildServer
-    }
-}
-
-pmd {
-    ruleSets = []
-    ruleSetFiles = files("../codeanalysis/pmd/ruleset.xml")
-}
-
-task pmd(type: Pmd, dependsOn: 'assembleDebug') {
-    description 'Run pmd'
-    group 'verification'
-
-    source = fileTree('src/main/java')
-
-    reports {
-        xml.enabled = buildServer
-        html.enabled = !buildServer
-    }
+    // Kodein
+    compile generalDeps.kodein
+    compile generalDeps.kodeinAndroid
 }
 
 apply plugin: 'org.owasp.dependencycheck'

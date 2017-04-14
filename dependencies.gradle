@@ -3,36 +3,31 @@ ext {
 
     // Plugin versions
     buildToolsVersion = '2.2.3'
-    retrolambdaVersion = '2.3.0'
-    retrolambdaPluginVersion = '3.2.5'
     owaspDepCheckPluginVersion = '1.4.4'
     dexCountPluginVersion = '0.6.2'
     databindingCompiler = '2.2.0'
 
     // Dependency versions
-    okhttpVersion = '3.4.2'
     supportVersion = '25.3.1'
-    icepickVersion = '3.2.0'
     playservicesVersion = '10.2.1'
-    chuckVersion = '1.0.3'
     crashLogVersion = '2.0.5'
     crittercismVersion = '5.6.4'
+    icepickVersion = '3.2.0'
+    chuckVersion = '1.0.3'
+    kodeinVersion = '3.3.0'
 
     pluginDeps = [
-            buildTools   : "com.android.tools.build:gradle:${buildToolsVersion}",
-            retrolambda  : "me.tatarka:gradle-retrolambda:${retrolambdaPluginVersion}",
-            owaspDepCheck: "org.owasp:dependency-check-gradle:${owaspDepCheckPluginVersion}",
-            dexCount     : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:${dexCountPluginVersion}"
+            buildTools         : "com.android.tools.build:gradle:${buildToolsVersion}",
+            owaspDepCheck      : "org.owasp:dependency-check-gradle:${owaspDepCheckPluginVersion}",
+            dexCount           : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:${dexCountPluginVersion}",
+            kotlin             : "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}",
+            databindingCompiler: "com.android.databinding:compiler:${databindingCompiler}",
+            icePickProcessor   : "frankiesardo:icepick-processor:${icepickVersion}"
     ]
 
     kotlinDeps = [
-            gradlePlugin       : "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}",
-            stdLib             : "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
-            databindingCompiler: "com.android.databinding:compiler:${databindingCompiler}"
-    ]
+            stdLib: "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
 
-    retrolambdaDeps = [
-            retrolambda: "net.orfjackal.retrolambda:retrolambda:${retrolambdaVersion}"
     ]
 
     supportDeps = [
@@ -41,21 +36,16 @@ ext {
             appCompat   : "com.android.support:appcompat-v7:${supportVersion}",
     ]
 
-    analyticsDeps = [
+    generalDeps = [
             crashlog               : "com.icapps.crashreporter:crashlog:${crashLogVersion}",
             crashlogCrittercism    : "com.icapps.crashreporter:crashlog-crittercism:${crashLogVersion}",
             crashlogGoogleAnalytics: "com.icapps.crashreporter:crashlog-googleanalytics:${crashLogVersion}",
             crittercism            : "com.crittercism:crittercism-android-agent:${crittercismVersion}",
-            playServicesAnalytics  : "com.google.android.gms:play-services-analytics:${playservicesVersion}"
-    ]
-
-    icePickDeps = [
-            icePick         : "frankiesardo:icepick:${icepickVersion}",
-            icePickProcessor: "frankiesardo:icepick-processor:${icepickVersion}"
-    ]
-
-    chuckDeps = [
-            chuck    : "com.readystatesoftware.chuck:library:${chuckVersion}",
-            chuckNoOp: "com.readystatesoftware.chuck:library-no-op:${chuckVersion}"
+            playServicesAnalytics  : "com.google.android.gms:play-services-analytics:${playservicesVersion}",
+            icePick                : "frankiesardo:icepick:${icepickVersion}",
+            chuck                  : "com.readystatesoftware.chuck:library:${chuckVersion}",
+            chuckNoOp              : "com.readystatesoftware.chuck:library-no-op:${chuckVersion}",
+            kodein                 : "com.github.salomonbrys.kodein:kodein:${kodeinVersion}",
+            kodeinAndroid          : "com.github.salomonbrys.kodein:kodein-android:${kodeinVersion}"
     ]
 }

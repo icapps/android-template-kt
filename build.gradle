@@ -1,14 +1,15 @@
 buildscript {
     apply from: 'dependencies.gradle'
+
     repositories {
         jcenter()
     }
+
     dependencies {
         classpath pluginDeps.buildTools
-        classpath pluginDeps.retrolambda
         classpath pluginDeps.owaspDepCheck
         classpath pluginDeps.dexCount
-        classpath kotlinDeps.gradlePlugin
+        classpath pluginDeps.kotlin
     }
 }
 

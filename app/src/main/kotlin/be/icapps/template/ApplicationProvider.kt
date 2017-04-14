@@ -3,16 +3,20 @@ package be.icapps.template
 import android.app.Application
 import android.content.pm.PackageManager
 import android.util.Log
-
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.KodeinAware
+import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.singleton
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
 import com.icapps.crashreporter.CompoundCrashReporter
 import com.icapps.crashreporter.CrashLog
-
 import crashreporter.crittercism.CrittercismCrashReporter
 import crashreporter.googleanalytics.GoogleAnalyticsCrashReporter
 
-class ApplicationProvider : Application() {
+class ApplicationProvider : Application(), KodeinAware {
+
+    lateinit override var kodein: Kodein
 
     private val mTracker: Tracker by lazy {
         val analytics = GoogleAnalytics.getInstance(this)
@@ -34,6 +38,10 @@ class ApplicationProvider : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        kodein = Kodein {
+            bind<Application>() with singleton { this@ApplicationProvider }
+        }
 
         if (!BuildConfig.DEBUG) {
             val compoundCrashReporter = CompoundCrashReporter()
