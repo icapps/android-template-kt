@@ -1,26 +1,24 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
+    apply from: 'dependencies.gradle'
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'org.owasp:dependency-check-gradle:1.4.4'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.2'
+        classpath pluginDeps.buildTools
+        classpath pluginDeps.retrolambda
+        classpath pluginDeps.owaspDepCheck
+        classpath pluginDeps.dexCount
+        classpath kotlinDeps.gradlePlugin
     }
 }
 
 def awsKey = System.env.AWS_ACCESS_KEY ?: AWS_ACCESS_KEY
 def awsSecretKey = System.env.AWS_SECRET_KEY ?: AWS_SECRET_KEY
 
-
 allprojects {
     repositories {
         jcenter()
-        maven {url "https://clojars.org/repo/"}
+        maven { url "https://clojars.org/repo/" }
         maven {
             url "s3://icappsmaven/release"
             credentials(AwsCredentials) {
@@ -34,5 +32,3 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
-apply from: 'dependencies.gradle'
