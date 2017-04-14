@@ -1,0 +1,38 @@
+ext {
+    okhttpVersion = '3.4.2'
+    supportVersion = '25.3.1'
+    icepickVersion = '3.2.0'
+    playservicesVersion = '10.2.1'
+    chuckVersion = '1.0.3'
+    crashLogVersion = '2.0.5'
+    crittercismVersion = '5.6.4'
+    retrolambdaVersion = '2.3.0'
+
+    retrolambdaDeps = [
+            retrolambda: "net.orfjackal.retrolambda:retrolambda:${retrolambdaVersion}"
+    ]
+
+    supportDeps = [
+            design      : "com.android.support:design:${supportVersion}",
+            recyclerView: "com.android.support:recyclerview-v7:${supportVersion}",
+            appCompat   : "com.android.support:appcompat-v7:${supportVersion}",
+    ]
+
+    analyticsDeps = [
+            crashlog               : "com.icapps.crashreporter:crashlog:${crashLogVersion}",
+            crashlogCrittercism    : "com.icapps.crashreporter:crashlog-crittercism:${crashLogVersion}",
+            crashlogGoogleAnalytics: "com.icapps.crashreporter:crashlog-googleanalytics:${crashLogVersion}",
+            crittercism            : "com.crittercism:crittercism-android-agent:${crittercismVersion}",
+            playServicesAnalytics  : "com.google.android.gms:play-services-analytics:${playservicesVersion}"
+    ]
+
+    icePickDeps = [
+            icePick         : "frankiesardo:icepick:${icepickVersion}",
+            icePickProcessor: "frankiesardo:icepick-processor:${icepickVersion}"
+    ]
+
+    chuckDeps = [
+            chuck    : "com.readystatesoftware.chuck:library:${chuckVersion}",
+            chuckNoOp: "com.readystatesoftware.chuck:library-no-op:${chuckVersion}"
+    ]
+}

@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 def buildServer = project.hasProperty("buildServer") && buildServer
@@ -73,12 +72,6 @@ android {
     }
 }
 
-ext.okhttpVersion = '3.4.2'
-ext.support = '25.2.0'
-ext.icepickVersion = '3.2.0'
-ext.playservices = '10.2.0'
-ext.chuck = '1.0.3'
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -87,26 +80,28 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     // Android support and compat libraries
-    compile "com.android.support:appcompat-v7:$support"
-    compile "com.android.support:recyclerview-v7:$support"
+    compile supportDeps.appCompat
+    compile supportDeps.design
+    compile supportDeps.recyclerView
 
-    // Lambda
-    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
+    // Lambda support
+    retrolambdaConfig retrolambdaDeps.retrolambda
 
     // Crash Reporting & Analytics
-    compile 'com.icapps.crashreporter:crashlog:2.0.5'
-    compile 'com.icapps.crashreporter:crashlog-crittercism:2.0.5'
-    compile 'com.icapps.crashreporter:crashlog-googleanalytics:2.0.5'
-    compile 'com.crittercism:crittercism-android-agent:5.6.4'
-    compile "com.google.android.gms:play-services-analytics:$playservices"
+    compile analyticsDeps.crashlog
+    compile analyticsDeps.crashlogCrittercism
+    compile analyticsDeps.crashlogGoogleAnalytics
+    compile analyticsDeps.crittercism
+    compile analyticsDeps.playServicesAnalytics
 
-    // Icepick for savedInstanceStates
-    compile "frankiesardo:icepick:$icepickVersion"
-    provided "frankiesardo:icepick-processor:$icepickVersion"
+    // Icepick
+    compile icePickDeps.icePick
+    provided icePickDeps.icePickProcessor
 
-    debugCompile "com.readystatesoftware.chuck:library:$chuck"
-    betaCompile "com.readystatesoftware.chuck:library-no-op:$chuck"
-    releaseCompile "com.readystatesoftware.chuck:library-no-op:$chuck"
+    // Chuck
+    debugCompile chuckDeps.chuck
+    betaCompile chuckDeps.chuckNoOp
+    releaseCompile chuckDeps.chuckNoOp
 }
 
 retrolambda {
@@ -123,7 +118,6 @@ findbugs {
 }
 
 task findbugs(type: FindBugs, dependsOn: 'assembleDebug') {
-
     description 'Run findbugs'
     group 'verification'
 
@@ -132,7 +126,6 @@ task findbugs(type: FindBugs, dependsOn: 'assembleDebug') {
     classpath = files()
 
     effort = 'max'
-
     excludeFilter = file("../codeanalysis/findbugs/exclude.xml")
 
     reports {
@@ -147,7 +140,6 @@ pmd {
 }
 
 task pmd(type: Pmd, dependsOn: 'assembleDebug') {
-
     description 'Run pmd'
     group 'verification'
 
