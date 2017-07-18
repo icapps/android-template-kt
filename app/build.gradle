@@ -1,9 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'findbugs'
-apply plugin: 'pmd'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'io.fabric'
 
 def buildServer = project.hasProperty("buildServer") && buildServer
 
@@ -95,19 +94,11 @@ dependencies {
 
     // Crash Reporting & Analytics
     compile generalDeps.crashlog
-    compile generalDeps.crashlogCrittercism
+    compile generalDeps.crashlogCrashlytics
     compile generalDeps.crashlogGoogleAnalytics
-    compile generalDeps.crittercism
     compile generalDeps.playServicesAnalytics
 
-    // Icepick
-    compile generalDeps.icePick
-    provided pluginDeps.icePickProcessor
-
-    // Chuck
-    debugCompile generalDeps.chuck
-    betaCompile generalDeps.chuckNoOp
-    releaseCompile generalDeps.chuckNoOp
+    debugCompile generalDeps.niddler
 
     // Kodein
     compile generalDeps.kodein

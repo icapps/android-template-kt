@@ -11,7 +11,7 @@ import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
 import com.icapps.crashreporter.CompoundCrashReporter
 import com.icapps.crashreporter.CrashLog
-import crashreporter.crittercism.CrittercismCrashReporter
+import crashreporter.crashlytics.CrashlyticsCrashReporter
 import crashreporter.googleanalytics.GoogleAnalyticsCrashReporter
 
 class ApplicationProvider : Application(), KodeinAware {
@@ -23,7 +23,6 @@ class ApplicationProvider : Application(), KodeinAware {
         analytics.enableAutoActivityReports(this)
         analytics.newTracker(R.xml.analytics)
                 .apply {
-                    enableAdvertisingIdCollection(true)
                     enableAutoActivityTracking(true)
                     setAppName(getString(R.string.app_name))
                     enableExceptionReporting(true)
@@ -43,18 +42,15 @@ class ApplicationProvider : Application(), KodeinAware {
             bind<Application>() with singleton { this@ApplicationProvider }
         }
 
+
         if (!BuildConfig.DEBUG) {
             val compoundCrashReporter = CompoundCrashReporter()
 
-            val critConfig = CrittercismCrashReporter.Config()
-            critConfig.includeVersionCode = true
-            critConfig.logNetworkCalls = false
-
-            compoundCrashReporter.addCrashLogger(CrittercismCrashReporter(this, getString(R.string.crittercism_id), critConfig))
+            compoundCrashReporter.addCrashLogger(CrashlyticsCrashReporter(this))
             compoundCrashReporter.addCrashLogger(GoogleAnalyticsCrashReporter(mTracker))
 
             CrashLog.initialize(compoundCrashReporter)
-            CrashLog.leaveBreadcrumb("App Started")
+            CrashLog.leaveBreadcrumb("App Created")
         }
     }
 
